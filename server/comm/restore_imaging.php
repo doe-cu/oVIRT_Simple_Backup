@@ -114,7 +114,8 @@
                             } else {
 
                                 $fileext = '.img';
-                                $command = '(pv -n ' . $filepath . $disknumberfile . '.img | dd of="' . '/dev/' . $dev . '" bs=1M conv=notrunc,noerror status=none)   > ' . $filepath . 'progress.dat' . ' 2>&1 &';//trailing & sends to background
+                                #$command = '(pv -n ' . $filepath . $disknumberfile . '.img | dd of="' . '/dev/' . $dev . '" bs=1M conv=notrunc,noerror status=none)   > ' . $filepath . 'progress.dat' . ' 2>&1 &';//trailing & sends to background
+                                $command = '(qemu-img convert -p -f host_device -O host_device ' . $filepath . $disknumberfile . '.img ' . '/dev/' . $dev . ')' . ' | perl -nle \'m/(\d{3,3})\..+/; print $1\'' .' > ' . $filepath . 'progress.dat' . ' 2>&1 &';//trailing & sends to background
 
                             }
 
