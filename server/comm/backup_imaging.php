@@ -123,7 +123,8 @@
                                         if (!empty($backupmpde)) {
                                             $command = '(pv -n /dev/' . $dev . ' | dd of="' . $settings['mount_backups'] . '/' . $sb_status['setting4'] . '/' . $sb_status['setting1'] . '/' . $sb_status['setting2'] . '/' . $disknumberfile . '.img" bs=1M conv=notrunc,noerror status=none)   > ' . $progressfilename . ' 2>&1 &';//trailing & sends to background
                                         } else {
-                                            $command = '(dd iflag=direct bs=1M status=none if=/dev/' . $dev . ' | pv -n -s ' . $disksize . ' | dd of="' . $settings['mount_backups'] . '/' . $sb_status['setting4'] . '/' . $sb_status['setting1'] . '/' . $sb_status['setting2'] . '/' . $disknumberfile . '.img" bs=1M oflag=direct conv=notrunc,noerror status=none)   > ' . $progressfilename . ' 2>&1 &';//trailing & sends to background
+                                            $command ='qemu-img convert -p -f host_device -O qcow2 /dev/' . $dev . ' "' . $settings['mount_backups'] . '/' . $sb_status['setting4'] . '/' . $sb_status['setting1'] . '/' . $sb_status['setting2'] . '/' . $disknumberfile . '.img" | ' . 'perl -nle \'m/(\d{3,3})\..+/; print $1\'' .' > '. $progressfilename . ' 2>&1 &';
+                                            #$command = '(dd iflag=direct bs=1M status=none if=/dev/' . $dev . ' | pv -n -s ' . $disksize . ' | dd of="' . $settings['mount_backups'] . '/' . $sb_status['setting4'] . '/' . $sb_status['setting1'] . '/' . $sb_status['setting2'] . '/' . $disknumberfile . '.img" bs=1M oflag=direct conv=notrunc,noerror status=none)   > ' . $progressfilename . ' 2>&1 &';//trailing & sends to background
                                         }
 
                                     } else if ( $settings['compress'] == '1' ) {
